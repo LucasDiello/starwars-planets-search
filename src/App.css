@@ -39,3 +39,10 @@
     transform: rotate(360deg);
   }
 }
+
+.container-planets {
+  border: 2px solid black;
+  overflow: scroll;
+  width: inherit;
+}
+

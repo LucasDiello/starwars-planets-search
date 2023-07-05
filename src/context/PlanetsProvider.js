@@ -4,6 +4,7 @@ import planetsContext from './PlanetsContext';
 
 function PlanetsProvider({ children }) {
   const [planets, setPlanets] = useState([]);
+  const [planetsFilt, setPlanetsFilt] = useState([]);
 
   useEffect(() => {
     const fetchPlanets = async () => {
@@ -14,8 +15,19 @@ function PlanetsProvider({ children }) {
     fetchPlanets();
   }, []);
 
+  const onChange = ({ target }) => {
+    const { value } = target;
+    const filt = planets.filter((planet) => planet.name.toLowerCase().includes(value));
+    console.log(filt);
+    setPlanetsFilt(filt);
+  };
+
   return (
-    <planetsContext.Provider value={ { data: planets } }>
+    <planetsContext.Provider
+      value={ { data: planets,
+        planetsFilt,
+        onChange } }
+    >
       <div>
         {children}
       </div>
