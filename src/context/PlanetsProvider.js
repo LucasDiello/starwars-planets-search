@@ -53,8 +53,20 @@ function PlanetsProvider({ children }) {
       }
     });
 
+    setColumn('population');
+    setComparison('maior que');
+    setValues(0);
     setPlanetsFilt(filt);
   }, [filtereds, planets]);
+
+  const removeFilter = (filter) => {
+    const addNewFilt = filtereds.filter((filt) => filt !== filter);
+    setFiltereds(addNewFilt);
+  };
+
+  const removeAllFilter = () => {
+    setFiltereds([]);
+  };
 
   const onChange = ({ target }) => {
     const { value } = target;
@@ -72,6 +84,8 @@ function PlanetsProvider({ children }) {
         comparison,
         values,
         filtereds,
+        removeAllFilter,
+        removeFilter,
         handleClick,
         handleChanges,
         onChange,

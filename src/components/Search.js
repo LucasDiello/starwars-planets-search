@@ -4,9 +4,16 @@ import PlanetsContext from '../context/PlanetsContext';
 function Search() {
   const change = useContext(PlanetsContext);
   const { onChange,
-    handleChanges, handleClick, column, comparison, values, filtereds } = change;
+    handleChanges,
+    handleClick,
+    column, comparison, values, filtereds, removeFilter, removeAllFilter } = change;
+
+  const options = ['population',
+    'orbital_period', 'diameter', 'rotation_period', 'surface_water'];
+  const verifyFiltereds = filtereds.map((filter) => filter.split(' ')[0]);
 
   return (
+
     <header>
       <h1>Star Wars Planets Search</h1>
       <input
@@ -24,11 +31,13 @@ function Search() {
             value={ column }
             data-testid="column-filter"
           >
-            <option value="population">population</option>
-            <option value="orbital_period">orbital_period</option>
-            <option value="diameter">diameter</option>
-            <option value="rotation_period">rotation_period</option>
-            <option value="surface_water">surface_water</option>
+            {options.map((option) => (
+              !verifyFiltereds.includes(option) && (
+                <option key={ option } value={ option }>
+                  {option}
+                </option>
+              )
+            ))}
           </select>
         </label>
         <label>
@@ -56,9 +65,21 @@ function Search() {
         <button onClick={ handleClick } type="button" data-testid="button-filter">
           Filtrar
         </button>
+        <button
+          data-testid="button-remove-filters"
+          onClick={ removeAllFilter }
+        >
+          Remover Filtros
+
+        </button>
         <div>
           {filtereds.length > 0 ? filtereds.map((filter, index) => (
-            <p key={ index }>{filter}</p>
+            <p data-testid="filter" key={ index }>
+              {filter}
+              {' '}
+              <button onClick={ () => removeFilter(filter) }>Remover Filtro</button>
+            </p>
+
           )) : null}
         </div>
       </div>
