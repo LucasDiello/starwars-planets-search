@@ -5,6 +5,10 @@ import planetsContext from './PlanetsContext';
 function PlanetsProvider({ children }) {
   const [planets, setPlanets] = useState([]);
   const [planetsFilt, setPlanetsFilt] = useState([]);
+  const [column, setColumn] = useState('population');
+  const [comparison, setComparison] = useState('maior que');
+  const [values, setValues] = useState(0);
+  const [filtereds, setFiltereds] = useState([]);
 
   useEffect(() => {
     const fetchPlanets = async () => {
@@ -15,22 +19,65 @@ function PlanetsProvider({ children }) {
     fetchPlanets();
   }, []);
 
+  const handleChanges = ({ target }) => {
+    const { name, value } = target;
+    if (name === 'column') {
+      setColumn(value);
+    }
+    if (name === 'comparison') {
+      setComparison(value);
+    }
+    if (name === 'values') {
+      setValues(value);
+    }
+  };
+
+  const handleClick = () => {
+    setFiltereds([...filtereds, `${column} ${comparison} ${values}`]);
+  };
+
+  useEffect(() => {
+    let filt = planets;
+
+    filtereds.forEach((filter) => {
+      const [columnFilt, compFilt] = filter.split(' ');
+      const value = filter.split(' ')[3];
+      if (compFilt === 'maior') {
+        filt = filt.filter((planet) => Number(planet[columnFilt]) > Number(value));
+      }
+      if (compFilt === 'menor') {
+        filt = filt.filter((planet) => Number(planet[columnFilt]) < Number(value));
+      }
+      if (compFilt === 'igual') {
+        filt = filt.filter((planet) => Number(planet[columnFilt]) === Number(value));
+      }
+    });
+
+    setPlanetsFilt(filt);
+  }, [filtereds, planets]);
+
   const onChange = ({ target }) => {
     const { value } = target;
+
     const filt = planets.filter((planet) => planet.name.toLowerCase().includes(value));
-    console.log(filt);
     setPlanetsFilt(filt);
   };
 
   return (
     <planetsContext.Provider
-      value={ { data: planets,
+      value={ {
+        data: planets,
         planetsFilt,
-        onChange } }
+        column,
+        comparison,
+        values,
+        filtereds,
+        handleClick,
+        handleChanges,
+        onChange,
+      } }
     >
-      <div>
-        {children}
-      </div>
+      <div>{children}</div>
     </planetsContext.Provider>
   );
 }
