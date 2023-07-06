@@ -6,7 +6,14 @@ function Search() {
   const { onChange,
     handleChanges,
     handleClick,
-    column, comparison, values, filtereds, removeFilter, removeAllFilter } = change;
+    column,
+    comparison,
+    values,
+    filtereds,
+    removeFilter,
+    removeAllFilter,
+    onChangeSort,
+    handleClickSort } = change;
 
   const options = ['population',
     'orbital_period', 'diameter', 'rotation_period', 'surface_water'];
@@ -70,6 +77,51 @@ function Search() {
           onClick={ removeAllFilter }
         >
           Remover Filtros
+
+        </button>
+        <label>
+          Ordenar
+          <select
+            data-testid="column-sort"
+            onChange={ onChangeSort }
+            name="column2"
+          >
+            {options.map((option) => (
+              (
+                <option key={ option } value={ option }>
+                  {option}
+                </option>
+              )
+            ))}
+          </select>
+        </label>
+        <label>
+          <input
+            type="radio"
+            data-testid="column-sort-input-asc"
+            name="sort"
+            value="ASC"
+            onChange={ onChangeSort }
+          />
+          Ascendente
+        </label>
+        <label>
+          <input
+            type="radio"
+            data-testid="column-sort-input-desc"
+            name="sort"
+            onChange={ onChangeSort }
+            value="DESC"
+          />
+          Descendente
+        </label>
+        <button
+          onClick={ handleClickSort }
+          data-testid="column-sort-button"
+        >
+          {' '}
+          Ordenar
+          {' '}
 
         </button>
         <div>

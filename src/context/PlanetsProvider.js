@@ -9,6 +9,9 @@ function PlanetsProvider({ children }) {
   const [comparison, setComparison] = useState('maior que');
   const [values, setValues] = useState(0);
   const [filtereds, setFiltereds] = useState([]);
+  const [column2, setColumn2] = useState('population');
+  const [sortd, setSort] = useState('');
+  const [planetSort, setPlanetSort] = useState([]);
 
   useEffect(() => {
     const fetchPlanets = async () => {
@@ -36,6 +39,26 @@ function PlanetsProvider({ children }) {
     setFiltereds([...filtereds, `${column} ${comparison} ${values}`]);
   };
 
+  const handleClickSort = () => {
+    const allPlanets = planets;
+    const ASCNUM = 1231231231231211;
+    const DESCNUM = 0;
+
+    const filt = allPlanets.sort((a, b) => {
+      const valA = a[column2] === 'unknown' ? DESCNUM : a[column2];
+      const valB = b[column2] === 'unknown' ? DESCNUM : b[column2];
+      const valueA = a[column2] === 'unknown' ? ASCNUM : a[column2];
+      const valueB = b[column2] === 'unknown' ? ASCNUM : b[column2];
+      if (sortd === 'ASC') {
+        return valueA - valueB;
+      }
+      if (sortd === 'DESC') {
+        return valB - valA;
+      }
+      return 0;
+    }); setPlanetSort(filt);
+  };
+
   useEffect(() => {
     let filt = planets;
 
@@ -60,8 +83,8 @@ function PlanetsProvider({ children }) {
   }, [filtereds, planets]);
 
   const removeFilter = (filter) => {
-    const addNewFilt = filtereds.filter((filt) => filt !== filter);
-    setFiltereds(addNewFilt);
+    const newFiltered = filtereds.filter((filt) => filt !== filter);
+    setFiltereds(newFiltered);
   };
 
   const removeAllFilter = () => {
@@ -75,15 +98,39 @@ function PlanetsProvider({ children }) {
     setPlanetsFilt(filt);
   };
 
+  const onChangeSort = ({ target }) => {
+    const { value, name } = target;
+    console.log('lucas');
+    if (value === 'ASC') {
+      console.log('ativei asc');
+      setSort(value);
+    }
+    if (value === 'DESC') {
+      console.log('ativei desc');
+      setSort(value);
+    }
+    if (name === 'column2') {
+      setColumn2(value);
+    }
+
+    console.log(value);
+  };
   return (
     <planetsContext.Provider
       value={ {
         data: planets,
+        order: {
+          column: column2,
+          sort: sortd,
+        },
         planetsFilt,
         column,
         comparison,
         values,
         filtereds,
+        planetSort,
+        handleClickSort,
+        onChangeSort,
         removeAllFilter,
         removeFilter,
         handleClick,
