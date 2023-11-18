@@ -25,22 +25,17 @@ describe('App', () => {
 
     fireEvent.click(filterButton);
 
-    // Verify filters are applied
     expect(screen.queryByText(/Alderaan/i)).not.toBeInTheDocument();
     
-    // Remove filters
     fireEvent.click(removeFilterButton);
 
-    // Verify filters are removed
     expect(screen.queryByText(/Alderaan/i)).not.toBeInTheDocument();
 
     fireEvent.click(removeAllFiltersButton);
 
-    // Verify filters are removed
     expect(screen.queryByText(/Alderaan/i)).not.toBeInTheDocument();
   });
   
-  // Write more tests to cover other functionalities and edge cases
   test('Verifica se o input de texto está na tela', () => {
     render(<App />);
     const inputElement = screen.getByTestId('name-filter');
